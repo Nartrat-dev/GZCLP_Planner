@@ -35,7 +35,7 @@ public class Cycle {
      */
     void next_iteration () {
         // When the cycle is at it's end, reset it
-        if (current_iteration == cycle.size() - 1) {
+        if (is_last_iteration()) {
             current_iteration = 0; // resets to first Iteration
         }
         // If it is not at it's end, go to the next Iteration
@@ -49,7 +49,7 @@ public class Cycle {
      */
     void previous_iteration() {
         // When the cycle is at it's beginning, go to the last element
-        if (current_iteration == 0) {
+        if (is_first_iteration()) {
             current_iteration = cycle.size() - 1; // resets to first Iteration
         }
         // If it is not at it's beginning, go to the previous Iteration
@@ -66,14 +66,16 @@ public class Cycle {
     }
 
     /**
+     * Checks, if cycle is at it's beginning
+     */
+    boolean is_first_iteration () {
+        return current_iteration == 0;
+    }
+
+    /**
      * Checks, if cycle is at it's end
      */
     boolean is_last_iteration () {
-        if (current_iteration == cycle.size() - 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return current_iteration == cycle.size() - 1;
     }
 }

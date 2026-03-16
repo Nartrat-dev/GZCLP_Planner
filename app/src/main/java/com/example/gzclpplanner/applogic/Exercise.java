@@ -89,7 +89,7 @@ public class Exercise {
      * Updates initial weight to current weight
      */
     void set_initial_weight_to_current_weight() {
-        initial_weight_kilograms = current_weight_kilograms;
+        current_weight_kilograms = initial_weight_kilograms;
     }
 }
 

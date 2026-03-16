@@ -1,43 +1,45 @@
 package com.example.gzclpplanner.applogic;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+/**
+ * Contains all the exercises of one workout (aka. Day)
+ */
 public class Workout {
 
     // Attributes
-    String workout_name;
-    int workout_number; // Number of Workout to determine sequence
-    ArrayList<Exercise> exercise_list;
+    private final String workout_name;
+    private final ArrayList<Exercise> exercise_list;
 
-
-    // To keep track of the amount of workouts and to make a sequence
-    static int total_workouts;
-    static int next_workout_number() {
-        return ++total_workouts;
-    }
 
     // Constructors
-    Workout() {
+    public Workout() {
         this.workout_name = "Unnamed Workout";
-        this.workout_number = next_workout_number();
+        this.exercise_list = new ArrayList<>();
     }
     Workout(String name) {
         this.workout_name = name;
-        this.workout_number = next_workout_number();
+        this.exercise_list = new ArrayList<>();
     }
 
     // Methods
-    void add_exercise(Exercise new_exercise) {
+    public void add_exercise(Exercise new_exercise) {
         exercise_list.add(new_exercise);
     }
-
-    void remove_exercise(int exercise_number) {
+    public void remove_exercise(int exercise_number) {
         exercise_list.remove(exercise_number);
     }
 
-    void swap_workout_numbers(Workout a, Workout b) {
-        int helper = a.workout_number;
-        a.workout_number = b.workout_number;
-        b.workout_number = helper;
+    public void swap_exercises(int index_a, int index_b) {
+        Collections.swap(exercise_list, index_a, index_b);
     }
 
+    // Getter Methods
+    public List<Exercise> get_exercise_list() {
+        return List.copyOf(exercise_list);
+    }
+    public String get_workout_name(){
+        return workout_name;
+    }
 }

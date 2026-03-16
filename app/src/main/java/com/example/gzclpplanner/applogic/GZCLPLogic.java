@@ -1,6 +1,15 @@
 package com.example.gzclpplanner.applogic;
 
+/**
+ *
+ */
 public class GZCLPLogic {
+
+    /**
+     * The logic that is used when finishing an exercise.
+     * @param success Supposed to be true, when the rep amount of every set was reached
+     * @param exercise The exercise that is being handled (weight and/or reps and sets adjustment)
+     */
     void do_exercise(boolean success, Exercise exercise) {
 
         // Situation 1: all reps in every set successfully done
@@ -8,19 +17,19 @@ public class GZCLPLogic {
 
             exercise.increase_weight_gzclp(); // Increase weight by 5 (lower body) or 2.5 (upper body)
 
-            // If it is the first Iteration of the cycle -> save weight
-            if (exercise.exercise_cycle.is_last_iteration()) {
+            // If it is the first Iteration of the cycle -> save weight for later restarts of cycle
+            if (exercise.exercise_cycle.is_first_iteration()) {
                 exercise.set_initial_weight_to_current_weight();
             }
 
         }
 
-        // Situation 2: one or more reps of one or more sets unsuccessfull
+        // Situation 2: one or more reps of one or more sets unsuccessful
         else {
             exercise.exercise_cycle.next_iteration(); // go to next Iteration
 
             // Lower weight, if the cycle is reset
-            if (exercise.exercise_cycle.current_iteration == 0) {
+            if (exercise.exercise_cycle.is_last_iteration()) {
                 exercise.reset_weight_gzclp(); // Resets Weight depending on tier and type of Exercise
             }
         }
