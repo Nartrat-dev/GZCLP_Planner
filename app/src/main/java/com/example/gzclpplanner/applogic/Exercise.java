@@ -6,7 +6,7 @@ public class Exercise {
     public enum Tier {T1, T2, T3}
 
     public enum Type {
-        UPPER(5.0), LOWER(2.5);
+        UPPER(2.5), LOWER(5.0);
         final double increment; // Increment -> amount of weight change for upper or lower body
 
         Type(double increment) {
@@ -78,7 +78,7 @@ public class Exercise {
     }
 
     /**
-     * Increeases Weights, depending on Tier and Type of the exercise
+     * Increases Weights, depending on Tier and Type of the exercise
      */
     void increase_weight_gzclp() {
         // Increase by 5kg for lower body exercises or by 2.5kg for upper body exercises

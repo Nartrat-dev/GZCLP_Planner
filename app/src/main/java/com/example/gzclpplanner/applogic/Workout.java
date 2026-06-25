@@ -14,13 +14,17 @@ public class Workout {
 
 
     // Constructors
-    public Workout() {
+    Workout() {
         this.workout_name = "Unnamed Workout";
         this.exercise_list = new ArrayList<>();
     }
     Workout(String name) {
         this.workout_name = name;
         this.exercise_list = new ArrayList<>();
+    }
+    Workout(String name, ArrayList<Exercise> exercises) {
+        this.workout_name = name;
+        this.exercise_list = exercises;
     }
 
     // Methods
