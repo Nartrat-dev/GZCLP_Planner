@@ -15,22 +15,22 @@ public class Exercise {
     }
 
     // Attributes *************************************************
-    String exercise_name;
+    public String exercise_name;
 
-    Tier exercise_tier;
-    Type exercise_type;
+    public Tier exercise_tier;
+    public Type exercise_type;
 
-    double current_weight_kilograms;
-    double initial_weight_kilograms;
+    public double current_weight_kilograms;
+    public double initial_weight_kilograms;
 
-    Cycle exercise_cycle; // i.e. {4,4}, {5,3}, {6,2}
+    public Cycle exercise_cycle; // i.e. {4,4}, {5,3}, {6,2}
 
     // Constructors ************************************************************************
     Exercise() {
         this.exercise_name = "Unnamed Exercise";
     }
 
-    Exercise(String name, Tier tier, Type type, double weight, Cycle cycle) {
+    public Exercise(String name, Tier tier, Type type, double weight, Cycle cycle) {
         this.exercise_name = name;
         this.current_weight_kilograms = weight;
         this.initial_weight_kilograms = weight;

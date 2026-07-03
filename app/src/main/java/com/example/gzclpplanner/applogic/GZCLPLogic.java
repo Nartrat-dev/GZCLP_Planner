@@ -10,7 +10,7 @@ public class GZCLPLogic {
      * @param success Supposed to be true, when the rep amount of every set was reached
      * @param exercise The exercise that is being handled (weight and/or reps and sets adjustment)
      */
-    void do_exercise(boolean success, Exercise exercise) {
+    public void do_exercise(boolean success, Exercise exercise) {
 
         // Situation 1: all reps in every set successfully done
         if (success) {

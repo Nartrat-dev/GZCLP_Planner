@@ -8,10 +8,10 @@ import java.util.ArrayList;
 public class Cycle {
     // Attributes
     ArrayList<Iteration> cycle;
-    int current_iteration;
+    public int current_iteration;
 
     // Constructors
-    Cycle (Iteration first_iteration, Iteration second_iteration, Iteration third_iteration) {
+    public Cycle(Iteration first_iteration, Iteration second_iteration, Iteration third_iteration) {
         this.current_iteration = 0; // Cycle starts at first Iteration
         this.cycle.add(first_iteration);
         this.cycle.add(second_iteration);
