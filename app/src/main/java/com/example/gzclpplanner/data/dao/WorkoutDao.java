@@ -1,15 +1,19 @@
 package com.example.gzclpplanner.data.dao;
-import androidx.lifecycle.LiveData;
 import androidx.room.*;
 
-import com.example.gzclpplanner.data.entity.ExerciseEntity;
 import com.example.gzclpplanner.data.entity.WorkoutEntity;
 import com.example.gzclpplanner.data.relations.*;
 
 @Dao
 public interface WorkoutDao {
     @Insert
-    long insert(WorkoutEntity workout);
+    void insert(WorkoutEntity workout);
+
+    @Update
+    void update(WorkoutEntity workout);
+
+    @Delete
+    void delete(WorkoutEntity workout);
 
     @Transaction
     @Query("SELECT * FROM workout WHERE id = :workoutId")
