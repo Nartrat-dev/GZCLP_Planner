@@ -10,11 +10,11 @@ import java.util.List;
 
 public class WorkoutPlanWithWorkouts {
     @Embedded
-    public WorkoutPlanEntity workout_plan;
+    public WorkoutPlanEntity workoutPlan;
 
     @Relation(
             parentColumn = "id",
-            entityColumn = "workout_plan_id"
+            entityColumn = "workoutPlanId"
     )
     public List<WorkoutEntity> workouts;
 }

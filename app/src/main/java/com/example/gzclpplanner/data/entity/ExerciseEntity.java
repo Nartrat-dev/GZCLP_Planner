@@ -11,18 +11,18 @@ import androidx.room.ForeignKey;
         @ForeignKey(
                 entity = WorkoutEntity.class,
                 parentColumns = "id",
-                childColumns = "workout_id",
+                childColumns = "workoutId",
                 onDelete = ForeignKey.CASCADE
         ),
 
         @ForeignKey(
             entity = CycleEntity.class,
             parentColumns = "id",
-            childColumns = "cycle_id",
+            childColumns = "cycleId",
             onDelete = ForeignKey.CASCADE
         )},
 
-        indices = {@Index("workout_id"), @Index("cycle_id")}
+        indices = {@Index("workoutId"), @Index("cycleId")}
 )
 public class ExerciseEntity {
     @PrimaryKey(autoGenerate = true)
@@ -30,13 +30,13 @@ public class ExerciseEntity {
 
 
     // Foreign keys
-    public int workout_id;
-    public int cycle_id;
+    public int workoutId;
+    public int cycleId;
 
     // Attributes of exercise
-    public String exercise_name;
+    public String exerciseName;
     public String tier;
     public String type;
-    public double current_weight;
-    public double initial_weight;
+    public double currentWeight;
+    public double initialWeight;
 }

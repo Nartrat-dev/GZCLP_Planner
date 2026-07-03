@@ -7,19 +7,19 @@ import androidx.room.*;
         foreignKeys = @ForeignKey(
                 entity = CycleEntity.class,
                 parentColumns = "id",
-                childColumns = "cycle_id",
+                childColumns = "cycleId",
                 onDelete = ForeignKey.CASCADE
         ),
-        indices = {@Index(("cycle_id"))}
+        indices = {@Index(("cycleId"))}
 )
 public class IterationEntity {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
     // Foreign keys
-    public int cycle_id;
+    public int cycleId;
 
     // Attributes
-    public int number_of_sets;
-    public int getNumber_of_reps;
+    public int numberOfSets;
+    public int numberOfReps;
 }

@@ -14,7 +14,7 @@ public class ExerciseWithCycles {
 
     @Relation(
             parentColumn = "id",
-            entityColumn = "cycle_id"
+            entityColumn = "cycleId"
     )
     public List<CycleEntity> cycles;
 }

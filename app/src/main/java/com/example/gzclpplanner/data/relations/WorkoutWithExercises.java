@@ -12,7 +12,7 @@ public class WorkoutWithExercises {
 
     @Relation(
             parentColumn = "id",
-            entityColumn = "workout_id"
+            entityColumn = "workoutId"
     )
     public List<ExerciseEntity> exercises;
 }

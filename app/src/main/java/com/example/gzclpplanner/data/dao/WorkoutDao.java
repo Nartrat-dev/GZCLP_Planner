@@ -12,6 +12,6 @@ public interface WorkoutDao {
     long insert(WorkoutEntity workout);
 
     @Transaction
-    @Query("SELECT * FROM workout WHERE id = :workout_id")
-    WorkoutWithExercises getWorkoutWithExercises(int workout_id);
+    @Query("SELECT * FROM workout WHERE id = :workoutId")
+    WorkoutWithExercises getWorkoutWithExercises(int workoutId);
 }

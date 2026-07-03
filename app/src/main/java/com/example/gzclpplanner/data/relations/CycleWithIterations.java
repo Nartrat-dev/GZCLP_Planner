@@ -13,7 +13,7 @@ public class CycleWithIterations {
 
     @Relation(
             parentColumn = "id",
-            entityColumn = "iteration_id"
+            entityColumn = "iterationId"
     )
     public List<IterationEntity> iteration;
 }
