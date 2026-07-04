@@ -26,12 +26,11 @@ public class GZCLPLogic {
 
         // Situation 2: one or more reps of one or more sets unsuccessful
         else {
-            exercise.exercise_cycle.next_iteration(); // go to next Iteration
-
-            // Lower weight, if the cycle is reset
+            // Lower weight, if the cycle is at its last iteration before incrementing/resetting
             if (exercise.exercise_cycle.is_last_iteration()) {
                 exercise.reset_weight_gzclp(); // Resets Weight depending on tier and type of Exercise
             }
+            exercise.exercise_cycle.next_iteration(); // go to next Iteration
         }
     }
 }

@@ -1,5 +1,9 @@
 package com.example.gzclpplanner.data.repository;
 
+import android.app.Application;
+
+import androidx.lifecycle.LiveData;
+
 import com.example.gzclpplanner.applogic.*;
 import com.example.gzclpplanner.data.AppDatabase;
 import com.example.gzclpplanner.data.entity.*;
@@ -15,6 +19,14 @@ public class Repository {
     private ExerciseDao exerciseDao;
     private CycleDao cycleDao;
     private AppDatabase db;
+    private GZCLPLogic logic;
+
+    public Repository(Application application) {
+        db = AppDatabase.getDatabase(application);
+        exerciseDao = db.exerciseDao();
+        cycleDao = db.cycleDao();
+        logic = new GZCLPLogic();
+    }
 
     /**
      * Cycle -> Entity
@@ -98,6 +110,28 @@ public class Repository {
         return e;
     }
 
+
+    /**
+     * Public API for UI
+     */
+
+    public LiveData<List<ExerciseEntity>> getAllExercises() {
+        return exerciseDao.getAllExercises();
+    }
+
+    public void completeExercise(int exerciseId, boolean success) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            ExerciseEntity entity = exerciseDao.getExerciseById(exerciseId);
+            if (entity == null) return;
+
+            CycleWithIterations cwi = cycleDao.getCycleWithIterations(entity.cycleId);
+            Exercise domainExercise = toDomain(entity, cwi);
+
+            logic.do_exercise(success, domainExercise);
+
+            saveExercise(domainExercise, entity.workoutId);
+        });
+    }
 
     /**
      * Saving a shared cycle without duplicating

@@ -59,7 +59,7 @@ public class Exercise {
      * Rounding function for GZCLP
      */
     double round_down_to_rounding_factor(double value, double rounding_factor) {
-        return Math.floor((value / rounding_factor) * value);
+        return Math.floor(value / rounding_factor) * rounding_factor;
     }
 
     /**
@@ -90,7 +90,7 @@ public class Exercise {
      * Updates initial weight to current weight
      */
     void set_initial_weight_to_current_weight() {
-        current_weight_kilograms = initial_weight_kilograms;
+        initial_weight_kilograms = current_weight_kilograms;
     }
 }
 

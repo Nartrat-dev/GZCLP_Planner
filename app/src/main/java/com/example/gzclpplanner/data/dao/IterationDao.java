@@ -1,11 +1,13 @@
 package com.example.gzclpplanner.data.dao;
 
+import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Update;
 
 import com.example.gzclpplanner.data.entity.IterationEntity;
 
+@Dao
 public interface IterationDao {
     @Insert
     void insert(IterationEntity iteration);

@@ -11,7 +11,9 @@ import com.example.gzclpplanner.data.entity.IterationEntity;
 import com.example.gzclpplanner.data.relations.CycleWithIterations;
 
 import java.util.List;
+import androidx.room.Dao;
 
+@Dao
 public interface CycleDao {
     @Insert
     long insertCycle(CycleEntity cycle);

@@ -7,6 +7,7 @@ import com.example.gzclpplanner.data.entity.ExerciseEntity;
 
 import java.util.List;
 
+@Dao
 public interface ExerciseDao {
     @Insert
     long insert(ExerciseEntity exercise);

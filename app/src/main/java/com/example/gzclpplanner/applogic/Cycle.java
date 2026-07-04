@@ -10,7 +10,7 @@ public class Cycle {
     // Attributes
     public int id;
     String cycle_name;
-    ArrayList<Iteration> cycle;
+    ArrayList<Iteration> cycle = new ArrayList<>();
     int current_iteration;
 
     // Constructors
@@ -22,7 +22,8 @@ public class Cycle {
     }
 
     public Cycle(List<Iteration> iterations) {
-        cycle.addAll(iterations);
+        this.current_iteration = 0;
+        this.cycle.addAll(iterations);
     }
 
 
@@ -38,6 +39,10 @@ public class Cycle {
     }
     public ArrayList<Iteration> get_cycle() {
         return cycle;
+    }
+
+    public int getCurrentIterationIndex() {
+        return current_iteration;
     }
 
 

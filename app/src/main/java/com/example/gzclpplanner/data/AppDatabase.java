@@ -10,11 +10,15 @@ import com.example.gzclpplanner.data.entity.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {ExerciseEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {ExerciseEntity.class, CycleEntity.class, IterationEntity.class, WorkoutEntity.class, WorkoutPlanEntity.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
-    // ExerciesDao
+    // DAOs
     public abstract ExerciseDao exerciseDao();
+    public abstract CycleDao cycleDao();
+    public abstract WorkoutDao workoutDao();
+    public abstract IterationDao iterationDao();
+    public abstract WorkoutPlanDao workoutPlanDao();
 
     private static volatile AppDatabase INSTANCE;
 
