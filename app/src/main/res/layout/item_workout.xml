@@ -14,14 +14,29 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
         <TextView
-            android:id="@+id/tvWorkoutName"
+            android:id="@+id/tvWorkoutNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="22sp"
             android:textStyle="bold"
             tools:text="Day 1" />
 
+            <TextView
+                android:id="@+id/tvWorkoutName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:gravity="end"
+                tools:text="Pull 1" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
-                android:text="@string/start" />
+                android:text="@string/go_to_workout" />
 
         </LinearLayout>
     </LinearLayout>
