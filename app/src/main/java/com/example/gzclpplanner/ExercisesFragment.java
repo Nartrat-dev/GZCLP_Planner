@@ -7,32 +7,35 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.gzclpplanner.databinding.FragmentFirstBinding;
+import com.example.gzclpplanner.databinding.FragmentExercisesBinding;
 
-public class FirstFragment extends Fragment {
+public class ExercisesFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private FragmentExercisesBinding binding;
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentExercisesBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonFirst.setOnClickListener(v ->
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment)
-        );
+        // Setup RecyclerView
+        binding.rvExercises.setLayoutManager(new LinearLayoutManager(requireContext()));
+        // TODO: Set adapter for exercises list
+
+        // Handle Add Exercise button
+        binding.btnAddExercise.setOnClickListener(v -> {
+            // TODO: Open add exercise dialog or navigate to add exercise screen
+        });
     }
 
     @Override
@@ -40,5 +43,5 @@ public class FirstFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }
+

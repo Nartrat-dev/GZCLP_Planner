@@ -7,32 +7,35 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.gzclpplanner.databinding.FragmentSecondBinding;
+import com.example.gzclpplanner.databinding.FragmentWorkoutsBinding;
 
-public class SecondFragment extends Fragment {
+public class WorkoutsFragment extends Fragment {
 
-    private FragmentSecondBinding binding;
+    private FragmentWorkoutsBinding binding;
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
+        binding = FragmentWorkoutsBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonSecond.setOnClickListener(v ->
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment)
-        );
+        // Setup RecyclerView
+        binding.rvExercises.setLayoutManager(new LinearLayoutManager(requireContext()));
+        // TODO: Set adapter for workouts list
+
+        // Handle Add Workout button
+        binding.btnAddWorkout.setOnClickListener(v -> {
+            // TODO: Open add workout dialog or navigate to add workout screen
+        });
     }
 
     @Override
@@ -40,5 +43,5 @@ public class SecondFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }
+
