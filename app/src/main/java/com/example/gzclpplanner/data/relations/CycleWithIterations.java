@@ -15,5 +15,5 @@ public class CycleWithIterations {
             parentColumn = "id",
             entityColumn = "iterationId"
     )
-    public List<IterationEntity> iteration;
+    public List<IterationEntity> iterations;
 }

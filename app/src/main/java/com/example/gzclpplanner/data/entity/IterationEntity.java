@@ -20,6 +20,7 @@ public class IterationEntity {
     public int cycleId;
 
     // Attributes
+    public int position;       // order within the cycle, needed for next_iteration()
     public int numberOfSets;
     public int numberOfReps;
 }

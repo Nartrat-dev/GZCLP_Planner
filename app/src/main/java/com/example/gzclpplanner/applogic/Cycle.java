@@ -1,5 +1,6 @@
 package com.example.gzclpplanner.applogic;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The cycle for GZCLP, i.e. Tier 1 Cycle
@@ -7,8 +8,10 @@ import java.util.ArrayList;
 
 public class Cycle {
     // Attributes
+    public int id;
+    String cycle_name;
     ArrayList<Iteration> cycle;
-    public int current_iteration;
+    int current_iteration;
 
     // Constructors
     public Cycle(Iteration first_iteration, Iteration second_iteration, Iteration third_iteration) {
@@ -18,8 +21,33 @@ public class Cycle {
         this.cycle.add(third_iteration);
     }
 
+    public Cycle(List<Iteration> iterations) {
+        cycle.addAll(iterations);
+    }
+
 
     // Methods
+    /**
+     * Getters
+     */
+    public Iteration get_current_iteration() {
+        return cycle.get(current_iteration);
+    }
+    public String get_cycle_name() {
+        return cycle_name;
+    }
+    public ArrayList<Iteration> get_cycle() {
+        return cycle;
+    }
+
+
+    /**
+     * Setters
+     */
+    public void set_current_iteration(int current_iteration) {
+        this.current_iteration = current_iteration;
+    }
+
     /**
      * Add or remove iteration from cycle
      */

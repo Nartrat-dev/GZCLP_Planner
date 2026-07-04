@@ -3,6 +3,7 @@ package com.example.gzclpplanner.applogic;
 
 public class Exercise {
 
+    public int id;
     public enum Tier {T1, T2, T3}
 
     public enum Type {

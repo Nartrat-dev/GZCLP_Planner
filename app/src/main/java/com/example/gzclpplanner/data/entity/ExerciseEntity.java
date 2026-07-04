@@ -20,9 +20,16 @@ import androidx.room.ForeignKey;
             parentColumns = "id",
             childColumns = "cycleId",
             onDelete = ForeignKey.CASCADE
+        ),
+
+        @ForeignKey(
+             entity = IterationEntity.class,
+             parentColumns = "id",
+             childColumns = "currentIterationId",
+             onDelete = ForeignKey.CASCADE
         )},
 
-        indices = {@Index("workoutId"), @Index("cycleId")}
+        indices = {@Index("workoutId"), @Index("cycleId"), @Index("currentIterationId")}
 )
 public class ExerciseEntity {
     @PrimaryKey(autoGenerate = true)
@@ -32,6 +39,7 @@ public class ExerciseEntity {
     // Foreign keys
     public int workoutId;
     public int cycleId;
+    public int currentIterationId;
 
     // Attributes of exercise
     public String exerciseName;

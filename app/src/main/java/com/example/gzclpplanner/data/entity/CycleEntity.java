@@ -7,5 +7,5 @@ public class CycleEntity {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    public String currentIteration;
+    public String name; // optional, e.g. "GZCLP T1"
 }

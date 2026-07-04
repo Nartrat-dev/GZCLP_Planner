@@ -6,6 +6,7 @@ package com.example.gzclpplanner.applogic;
 
 public final class Iteration {
 
+    public int id;
     private final int number_of_sets;
     private final int number_of_reps;
 
@@ -20,9 +21,7 @@ public final class Iteration {
     public int sets() {
         return number_of_sets;
     }
-
     public int reps() {
         return number_of_reps;
     }
-
 }

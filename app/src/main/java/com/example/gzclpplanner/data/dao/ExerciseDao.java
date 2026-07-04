@@ -4,13 +4,12 @@ import androidx.lifecycle.LiveData;
 import androidx.room.*;
 
 import com.example.gzclpplanner.data.entity.ExerciseEntity;
-import com.example.gzclpplanner.data.relations.*;
 
 import java.util.List;
 
 public interface ExerciseDao {
     @Insert
-    void insert(ExerciseEntity exercise);
+    long insert(ExerciseEntity exercise);
 
     @Update
     void update(ExerciseEntity exercise);
