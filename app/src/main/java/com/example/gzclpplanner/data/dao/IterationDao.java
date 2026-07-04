@@ -10,7 +10,7 @@ import com.example.gzclpplanner.data.entity.IterationEntity;
 @Dao
 public interface IterationDao {
     @Insert
-    void insert(IterationEntity iteration);
+    long insert(IterationEntity iteration);
 
     @Update
     void update(IterationEntity iteration);

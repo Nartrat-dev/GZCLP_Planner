@@ -9,11 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.gzclpplanner.data.entity.ExerciseEntity;
+import com.example.gzclpplanner.data.repository.Repository;
 import com.example.gzclpplanner.databinding.FragmentExercisesBinding;
 
-public class ExercisesFragment extends Fragment {
+import java.util.List;
+
+public class ExercisesFragment extends Fragment implements ExerciseAdapter.OnExerciseActionListener {
 
     private FragmentExercisesBinding binding;
+    private Repository repository;
+    private ExerciseAdapter adapter;
 
     @Override
     public View onCreateView(
@@ -21,6 +27,7 @@ public class ExercisesFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         binding = FragmentExercisesBinding.inflate(inflater, container, false);
+        repository = new Repository(requireActivity().getApplication());
         return binding.getRoot();
     }
 
@@ -30,12 +37,28 @@ public class ExercisesFragment extends Fragment {
 
         // Setup RecyclerView
         binding.rvExercises.setLayoutManager(new LinearLayoutManager(requireContext()));
-        // TODO: Set adapter for exercises list
+        adapter = new ExerciseAdapter(this);
+        binding.rvExercises.setAdapter(adapter);
+
+        // Observe data
+        repository.getAllExercises().observe(getViewLifecycleOwner(), exercises -> {
+            adapter.setExercises(exercises);
+        });
 
         // Handle Add Exercise button
         binding.btnAddExercise.setOnClickListener(v -> {
             // TODO: Open add exercise dialog or navigate to add exercise screen
         });
+    }
+
+    @Override
+    public void onDone(ExerciseEntity exercise) {
+        repository.completeExercise(exercise.id, true);
+    }
+
+    @Override
+    public void onFailed(ExerciseEntity exercise) {
+        repository.completeExercise(exercise.id, false);
     }
 
     @Override

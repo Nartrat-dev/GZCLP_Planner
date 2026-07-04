@@ -9,22 +9,27 @@ import com.example.gzclpplanner.data.AppDatabase;
 import com.example.gzclpplanner.data.entity.*;
 import com.example.gzclpplanner.data.dao.*;
 import com.example.gzclpplanner.data.relations.CycleWithIterations;
+import com.example.gzclpplanner.data.relations.WorkoutWithExercises;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 public class Repository {
 
-    private ExerciseDao exerciseDao;
-    private CycleDao cycleDao;
-    private AppDatabase db;
-    private GZCLPLogic logic;
+    private final ExerciseDao exerciseDao;
+    private final CycleDao cycleDao;
+    private final WorkoutDao workoutDao;
+    private final WorkoutPlanDao workoutPlanDao;
+    private final GZCLPLogic logic;
 
     public Repository(Application application) {
-        db = AppDatabase.getDatabase(application);
+        AppDatabase db = AppDatabase.getDatabase(application);
         exerciseDao = db.exerciseDao();
         cycleDao = db.cycleDao();
+        workoutDao = db.workoutDao();
+        workoutPlanDao = db.workoutPlanDao();
         logic = new GZCLPLogic();
     }
 
@@ -119,6 +124,10 @@ public class Repository {
         return exerciseDao.getAllExercises();
     }
 
+    public LiveData<List<WorkoutWithExercises>> getAllWorkoutsWithExercises() {
+        return workoutDao.getAllWorkoutsWithExercises();
+    }
+
     public void completeExercise(int exerciseId, boolean success) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             ExerciseEntity entity = exerciseDao.getExerciseById(exerciseId);
@@ -131,6 +140,71 @@ public class Repository {
 
             saveExercise(domainExercise, entity.workoutId);
         });
+    }
+
+    public void initializeDefaultData() {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            if (workoutPlanDao.getWorkoutPlan() != null) {
+                return; // Data already exists
+            }
+
+            WorkoutPlanEntity plan = new WorkoutPlanEntity();
+            plan.id = 1;
+            plan.currentWorkout = 1;
+            workoutPlanDao.insert(plan);
+
+            String[] workoutNames = {"Workout A1", "Workout B1", "Workout A2", "Workout B2"};
+            for (int i = 0; i < 4; i++) {
+                WorkoutEntity workout = new WorkoutEntity();
+                workout.workoutPlanId = 1;
+                workout.workoutName = workoutNames[i];
+                workout.workoutNumber = i + 1;
+                long workoutId = workoutDao.insert(workout);
+
+                // Add 4 exercises per workout
+                addDefaultExercisesForWorkout((int) workoutId, i);
+            }
+        });
+    }
+
+    private void addDefaultExercisesForWorkout(int workoutId, int workoutIndex) {
+        // T1: 3x5, 3x3, 3x1
+        // T2: 3x10, 3x8, 3x6
+        // T3: 3x15, 3x12, 3x10
+
+        Iteration t1_1 = new Iteration(3, 5);
+        Iteration t1_2 = new Iteration(3, 3);
+        Iteration t1_3 = new Iteration(3, 1);
+
+        Iteration t2_1 = new Iteration(3, 10);
+        Iteration t2_2 = new Iteration(3, 8);
+        Iteration t2_3 = new Iteration(3, 6);
+
+        Iteration t3_1 = new Iteration(3, 15);
+        Iteration t3_2 = new Iteration(3, 12);
+        Iteration t3_3 = new Iteration(3, 10);
+
+        if (workoutIndex == 0) { // A1
+            saveExercise(new Exercise("Squat", Exercise.Tier.T1, Exercise.Type.LOWER, 100, new Cycle(Arrays.asList(t1_1, t1_2, t1_3))), workoutId);
+            saveExercise(new Exercise("Bench Press", Exercise.Tier.T2, Exercise.Type.UPPER, 60, new Cycle(Arrays.asList(t2_1, t2_2, t2_3))), workoutId);
+            saveExercise(new Exercise("Lat Pulldown", Exercise.Tier.T3, Exercise.Type.UPPER, 40, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
+            saveExercise(new Exercise("Leg Press", Exercise.Tier.T3, Exercise.Type.LOWER, 80, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
+        } else if (workoutIndex == 1) { // B1
+            saveExercise(new Exercise("Overhead Press", Exercise.Tier.T1, Exercise.Type.UPPER, 40, new Cycle(Arrays.asList(t1_1, t1_2, t1_3))), workoutId);
+            saveExercise(new Exercise("Deadlift", Exercise.Tier.T2, Exercise.Type.LOWER, 120, new Cycle(Arrays.asList(t2_1, t2_2, t2_3))), workoutId);
+            saveExercise(new Exercise("Dumbbell Row", Exercise.Tier.T3, Exercise.Type.UPPER, 20, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
+            saveExercise(new Exercise("Plank", Exercise.Tier.T3, Exercise.Type.UPPER, 0, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
+        } else if (workoutIndex == 2) { // A2
+            saveExercise(new Exercise("Bench Press", Exercise.Tier.T1, Exercise.Type.UPPER, 70, new Cycle(Arrays.asList(t1_1, t1_2, t1_3))), workoutId);
+            saveExercise(new Exercise("Squat", Exercise.Tier.T2, Exercise.Type.LOWER, 85, new Cycle(Arrays.asList(t2_1, t2_2, t2_3))), workoutId);
+            saveExercise(new Exercise("Face Pulls", Exercise.Tier.T3, Exercise.Type.UPPER, 15, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
+            saveExercise(new Exercise("Calf Raises", Exercise.Tier.T3, Exercise.Type.LOWER, 30, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
+        } else if (workoutIndex == 3) { // B2
+            saveExercise(new Exercise("Deadlift", Exercise.Tier.T1, Exercise.Type.LOWER, 140, new Cycle(Arrays.asList(t1_1, t1_2, t1_3))), workoutId);
+            saveExercise(new Exercise("Overhead Press", Exercise.Tier.T2, Exercise.Type.UPPER, 35, new Cycle(Arrays.asList(t2_1, t2_2, t2_3))), workoutId);
+            saveExercise(new Exercise("Bicep Curls", Exercise.Tier.T3, Exercise.Type.UPPER, 12.5, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
+            saveExercise(new Exercise("Tricep Extensions", Exercise.Tier.T3, Exercise.Type.UPPER, 12.5, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
+        }
     }
 
     /**

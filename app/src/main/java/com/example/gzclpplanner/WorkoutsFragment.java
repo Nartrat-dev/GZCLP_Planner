@@ -9,11 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.gzclpplanner.data.relations.WorkoutWithExercises;
+import com.example.gzclpplanner.data.repository.Repository;
 import com.example.gzclpplanner.databinding.FragmentWorkoutsBinding;
 
-public class WorkoutsFragment extends Fragment {
+import java.util.List;
+
+public class WorkoutsFragment extends Fragment implements WorkoutAdapter.OnWorkoutActionListener {
 
     private FragmentWorkoutsBinding binding;
+    private Repository repository;
+    private WorkoutAdapter adapter;
 
     @Override
     public View onCreateView(
@@ -21,6 +27,7 @@ public class WorkoutsFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         binding = FragmentWorkoutsBinding.inflate(inflater, container, false);
+        repository = new Repository(requireActivity().getApplication());
         return binding.getRoot();
     }
 
@@ -30,12 +37,23 @@ public class WorkoutsFragment extends Fragment {
 
         // Setup RecyclerView
         binding.rvExercises.setLayoutManager(new LinearLayoutManager(requireContext()));
-        // TODO: Set adapter for workouts list
+        adapter = new WorkoutAdapter(this);
+        binding.rvExercises.setAdapter(adapter);
+
+        // Observe data
+        repository.getAllWorkoutsWithExercises().observe(getViewLifecycleOwner(), workouts -> {
+            adapter.setWorkouts(workouts);
+        });
 
         // Handle Add Workout button
         binding.btnAddWorkout.setOnClickListener(v -> {
             // TODO: Open add workout dialog or navigate to add workout screen
         });
+    }
+
+    @Override
+    public void onStartWorkout(WorkoutWithExercises workout) {
+        // TODO: Navigate to active workout screen or similar
     }
 
     @Override
