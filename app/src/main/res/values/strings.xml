@@ -45,4 +45,7 @@
     </string>
     <string name="exercise_name">exercise_name</string>
     <string name="exercise_tier">tier</string>
+    <string name="failed">Failed</string>
+    <string name="done">Done</string>
+    <string name="start">Start</string>
 </resources>
