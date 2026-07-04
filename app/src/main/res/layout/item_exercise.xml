@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
@@ -14,68 +14,97 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvExerciseName"
-            android:layout_width="wrap_content"
+        <!-- Header with exercise name and number -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:text="Squat" />
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
 
+            <TextView
+                android:id="@+id/tvExerciseName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="Squat" />
+
+            <TextView
+                android:id="@+id/tvExerciseNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#666666"
+                tools:text="#1" />
+
+        </LinearLayout>
+
+        <!-- Tier info -->
         <TextView
             android:id="@+id/tvTier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:textColor="#888888"
+            android:layout_marginBottom="12dp"
             tools:text="Tier 1" />
 
+        <!-- Sets x Reps and Weight -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginBottom="16dp">
 
-            <TextView
-                android:id="@+id/tvSets"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="16sp"
-                tools:text="5 Sets" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvX"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="16sp"
-                tools:text="X" />
+                <TextView
+                    android:id="@+id/tvSets"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    tools:text="5 Sets" />
 
-            <TextView
-                android:id="@+id/tvReps"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="16sp"
-                tools:text="3 Reps" />
+                <TextView
+                    android:id="@+id/tvX"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_marginHorizontal="8dp"
+                    tools:text="X" />
+
+                <TextView
+                    android:id="@+id/tvReps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    tools:text="3 Reps" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvWeight"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textSize="16sp"
-                android:gravity="end"
                 android:textStyle="bold"
+                android:textColor="#1976D2"
                 tools:text="100 kg" />
+
         </LinearLayout>
 
+        <!-- Action buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="12dp">
+            android:spacing="8dp">
 
             <Button
                 android:id="@+id/btnDone"
@@ -83,7 +112,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="4dp"
-                android:text="@string/done" />
+                android:text="@string/done"
+                android:backgroundTint="#4CAF50" />
 
             <Button
                 android:id="@+id/btnFailed"
@@ -91,8 +121,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="4dp"
-                android:text="@string/failed" />
+                android:text="@string/failed"
+                android:backgroundTint="#F44336" />
+
         </LinearLayout>
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

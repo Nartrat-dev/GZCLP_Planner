@@ -49,4 +49,12 @@
     <string name="done">Done</string>
     <string name="start">Start</string>
     <string name="go_to_workout">Go to workout</string>
+
+    <!-- Page titles -->
+    <string name="workouts_title">Workouts</string>
+    <string name="exercises_title">Exercises</string>
+
+    <!-- Action buttons -->
+    <string name="add_workout">+ Add Workout</string>
+    <string name="add_exercise">+ Add Exercise</string>
 </resources>

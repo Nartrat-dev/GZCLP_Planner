@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="8dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
@@ -14,61 +14,53 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Header with workout day and name -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="8dp">
+            android:layout_marginBottom="12dp">
 
-        <TextView
-            android:id="@+id/tvWorkoutNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            tools:text="Day 1" />
+            <TextView
+                android:id="@+id/tvWorkoutNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#1976D2"
+                tools:text="Day 1" />
 
             <TextView
                 android:id="@+id/tvWorkoutName"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:textSize="18sp"
                 android:gravity="end"
+                android:textStyle="bold"
                 tools:text="Pull 1" />
 
         </LinearLayout>
 
+        <!-- Exercise list -->
         <LinearLayout
+            android:id="@+id/dynamicExerciseContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp">
-
-            <LinearLayout
-                android:id="@+id/dynamicExerciseContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-            <!-- Dynamic TextViews depending on exercise amount of workout-->
-            </LinearLayout>
-
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+            <!-- Dynamic TextViews depending on exercise amount of workout -->
         </LinearLayout>
 
-        <LinearLayout
+        <!-- Action button -->
+        <Button
+            android:id="@+id/btnStartWorkout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="12dp">
+            android:text="@string/go_to_workout"
+            android:backgroundTint="#4CAF50" />
 
-            <Button
-                android:id="@+id/btnStartWorkout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="1"
-                android:text="@string/go_to_workout" />
-
-        </LinearLayout>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
