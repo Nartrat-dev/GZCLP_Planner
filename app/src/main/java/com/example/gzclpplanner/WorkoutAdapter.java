@@ -76,7 +76,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
                 binding.dynamicExerciseContainer.addView(tv);
             }
 
-            binding.btnStartWorkout.setOnClickListener(v -> listener.onStartWorkout(workoutWithExercises));
+            binding.btnGoToWorkout.setOnClickListener(v -> listener.onStartWorkout(workoutWithExercises));
         }
     }
 }

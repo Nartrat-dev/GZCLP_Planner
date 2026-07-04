@@ -3,12 +3,15 @@ package com.example.gzclpplanner.data.repository;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 
 import com.example.gzclpplanner.applogic.*;
 import com.example.gzclpplanner.data.AppDatabase;
 import com.example.gzclpplanner.data.entity.*;
 import com.example.gzclpplanner.data.dao.*;
 import com.example.gzclpplanner.data.relations.CycleWithIterations;
+import com.example.gzclpplanner.data.relations.ExerciseWithIteration;
+import com.example.gzclpplanner.data.relations.WorkoutWithExercises;
 import com.example.gzclpplanner.data.relations.WorkoutWithExercises;
 
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ public class Repository {
     private final CycleDao cycleDao;
     private final WorkoutDao workoutDao;
     private final WorkoutPlanDao workoutPlanDao;
+    private final IterationDao iterationDao;
     private final GZCLPLogic logic;
 
     public Repository(Application application) {
@@ -30,6 +34,7 @@ public class Repository {
         cycleDao = db.cycleDao();
         workoutDao = db.workoutDao();
         workoutPlanDao = db.workoutPlanDao();
+        iterationDao = db.iterationDao();
         logic = new GZCLPLogic();
     }
 
@@ -128,6 +133,36 @@ public class Repository {
         return workoutDao.getAllWorkoutsWithExercises();
     }
 
+    public LiveData<List<ExerciseEntity>> getAllExercisesWithSetsReps() {
+        return Transformations.map(exerciseDao.getAllExercisesWithIteration(), (List<ExerciseWithIteration> ewIs) -> {
+            List<ExerciseEntity> result = new ArrayList<>();
+            for (ExerciseWithIteration ewi : ewIs) {
+                ExerciseEntity e = ewi.exercise;
+                if (ewi.iteration != null) {
+                    e.sets = ewi.iteration.numberOfSets;
+                    e.reps = ewi.iteration.numberOfReps;
+                }
+                result.add(e);
+            }
+            return result;
+        });
+    }
+
+    public LiveData<List<ExerciseEntity>> getExercisesForWorkout(int workoutId) {
+        return Transformations.map(exerciseDao.getExercisesForWorkoutWithIteration(workoutId), (List<ExerciseWithIteration> ewIs) -> {
+            List<ExerciseEntity> result = new ArrayList<>();
+            for (ExerciseWithIteration ewi : ewIs) {
+                ExerciseEntity e = ewi.exercise;
+                if (ewi.iteration != null) {
+                    e.sets = ewi.iteration.numberOfSets;
+                    e.reps = ewi.iteration.numberOfReps;
+                }
+                result.add(e);
+            }
+            return result;
+        });
+    }
+
     public void completeExercise(int exerciseId, boolean success) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             ExerciseEntity entity = exerciseDao.getExerciseById(exerciseId);
@@ -138,6 +173,7 @@ public class Repository {
 
             logic.do_exercise(success, domainExercise);
 
+            // saveExercise is now synchronous-capable since it's called within this executor block
             saveExercise(domainExercise, entity.workoutId);
         });
     }
@@ -172,68 +208,50 @@ public class Repository {
         // T2: 3x10, 3x8, 3x6
         // T3: 3x15, 3x12, 3x10
 
-        Iteration t1_1 = new Iteration(3, 5);
-        Iteration t1_2 = new Iteration(3, 3);
-        Iteration t1_3 = new Iteration(3, 1);
-
-        Iteration t2_1 = new Iteration(3, 10);
-        Iteration t2_2 = new Iteration(3, 8);
-        Iteration t2_3 = new Iteration(3, 6);
-
-        Iteration t3_1 = new Iteration(3, 15);
-        Iteration t3_2 = new Iteration(3, 12);
-        Iteration t3_3 = new Iteration(3, 10);
-
         if (workoutIndex == 0) { // A1
-            saveExercise(new Exercise("Squat", Exercise.Tier.T1, Exercise.Type.LOWER, 100, new Cycle(Arrays.asList(t1_1, t1_2, t1_3))), workoutId);
-            saveExercise(new Exercise("Bench Press", Exercise.Tier.T2, Exercise.Type.UPPER, 60, new Cycle(Arrays.asList(t2_1, t2_2, t2_3))), workoutId);
-            saveExercise(new Exercise("Lat Pulldown", Exercise.Tier.T3, Exercise.Type.UPPER, 40, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
-            saveExercise(new Exercise("Leg Press", Exercise.Tier.T3, Exercise.Type.LOWER, 80, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
+            saveExercise(new Exercise("Squat", Exercise.Tier.T1, Exercise.Type.LOWER, 100, new Cycle(Arrays.asList(new Iteration(3, 5), new Iteration(3, 3), new Iteration(3, 1)))), workoutId);
+            saveExercise(new Exercise("Bench Press", Exercise.Tier.T2, Exercise.Type.UPPER, 60, new Cycle(Arrays.asList(new Iteration(3, 10), new Iteration(3, 8), new Iteration(3, 6)))), workoutId);
+            saveExercise(new Exercise("Lat Pulldown", Exercise.Tier.T3, Exercise.Type.UPPER, 40, new Cycle(Arrays.asList(new Iteration(3, 15), new Iteration(3, 12), new Iteration(3, 10)))), workoutId);
+            saveExercise(new Exercise("Leg Press", Exercise.Tier.T3, Exercise.Type.LOWER, 80, new Cycle(Arrays.asList(new Iteration(3, 15), new Iteration(3, 12), new Iteration(3, 10)))), workoutId);
         } else if (workoutIndex == 1) { // B1
-            saveExercise(new Exercise("Overhead Press", Exercise.Tier.T1, Exercise.Type.UPPER, 40, new Cycle(Arrays.asList(t1_1, t1_2, t1_3))), workoutId);
-            saveExercise(new Exercise("Deadlift", Exercise.Tier.T2, Exercise.Type.LOWER, 120, new Cycle(Arrays.asList(t2_1, t2_2, t2_3))), workoutId);
-            saveExercise(new Exercise("Dumbbell Row", Exercise.Tier.T3, Exercise.Type.UPPER, 20, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
-            saveExercise(new Exercise("Plank", Exercise.Tier.T3, Exercise.Type.UPPER, 0, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
+            saveExercise(new Exercise("Overhead Press", Exercise.Tier.T1, Exercise.Type.UPPER, 40, new Cycle(Arrays.asList(new Iteration(3, 5), new Iteration(3, 3), new Iteration(3, 1)))), workoutId);
+            saveExercise(new Exercise("Deadlift", Exercise.Tier.T2, Exercise.Type.LOWER, 120, new Cycle(Arrays.asList(new Iteration(3, 10), new Iteration(3, 8), new Iteration(3, 6)))), workoutId);
+            saveExercise(new Exercise("Dumbbell Row", Exercise.Tier.T3, Exercise.Type.UPPER, 20, new Cycle(Arrays.asList(new Iteration(3, 15), new Iteration(3, 12), new Iteration(3, 10)))), workoutId);
+            saveExercise(new Exercise("Plank", Exercise.Tier.T3, Exercise.Type.UPPER, 0, new Cycle(Arrays.asList(new Iteration(3, 15), new Iteration(3, 12), new Iteration(3, 10)))), workoutId);
         } else if (workoutIndex == 2) { // A2
-            saveExercise(new Exercise("Bench Press", Exercise.Tier.T1, Exercise.Type.UPPER, 70, new Cycle(Arrays.asList(t1_1, t1_2, t1_3))), workoutId);
-            saveExercise(new Exercise("Squat", Exercise.Tier.T2, Exercise.Type.LOWER, 85, new Cycle(Arrays.asList(t2_1, t2_2, t2_3))), workoutId);
-            saveExercise(new Exercise("Face Pulls", Exercise.Tier.T3, Exercise.Type.UPPER, 15, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
-            saveExercise(new Exercise("Calf Raises", Exercise.Tier.T3, Exercise.Type.LOWER, 30, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
+            saveExercise(new Exercise("Bench Press", Exercise.Tier.T1, Exercise.Type.UPPER, 70, new Cycle(Arrays.asList(new Iteration(3, 5), new Iteration(3, 3), new Iteration(3, 1)))), workoutId);
+            saveExercise(new Exercise("Squat", Exercise.Tier.T2, Exercise.Type.LOWER, 85, new Cycle(Arrays.asList(new Iteration(3, 10), new Iteration(3, 8), new Iteration(3, 6)))), workoutId);
+            saveExercise(new Exercise("Face Pulls", Exercise.Tier.T3, Exercise.Type.UPPER, 15, new Cycle(Arrays.asList(new Iteration(3, 15), new Iteration(3, 12), new Iteration(3, 10)))), workoutId);
+            saveExercise(new Exercise("Calf Raises", Exercise.Tier.T3, Exercise.Type.LOWER, 30, new Cycle(Arrays.asList(new Iteration(3, 15), new Iteration(3, 12), new Iteration(3, 10)))), workoutId);
         } else if (workoutIndex == 3) { // B2
-            saveExercise(new Exercise("Deadlift", Exercise.Tier.T1, Exercise.Type.LOWER, 140, new Cycle(Arrays.asList(t1_1, t1_2, t1_3))), workoutId);
-            saveExercise(new Exercise("Overhead Press", Exercise.Tier.T2, Exercise.Type.UPPER, 35, new Cycle(Arrays.asList(t2_1, t2_2, t2_3))), workoutId);
-            saveExercise(new Exercise("Bicep Curls", Exercise.Tier.T3, Exercise.Type.UPPER, 12.5, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
-            saveExercise(new Exercise("Tricep Extensions", Exercise.Tier.T3, Exercise.Type.UPPER, 12.5, new Cycle(Arrays.asList(t3_1, t3_2, t3_3))), workoutId);
+            saveExercise(new Exercise("Deadlift", Exercise.Tier.T1, Exercise.Type.LOWER, 140, new Cycle(Arrays.asList(new Iteration(3, 5), new Iteration(3, 3), new Iteration(3, 1)))), workoutId);
+            saveExercise(new Exercise("Overhead Press", Exercise.Tier.T2, Exercise.Type.UPPER, 35, new Cycle(Arrays.asList(new Iteration(3, 10), new Iteration(3, 8), new Iteration(3, 6)))), workoutId);
+            saveExercise(new Exercise("Bicep Curls", Exercise.Tier.T3, Exercise.Type.UPPER, 12.5, new Cycle(Arrays.asList(new Iteration(3, 15), new Iteration(3, 12), new Iteration(3, 10)))), workoutId);
+            saveExercise(new Exercise("Tricep Extensions", Exercise.Tier.T3, Exercise.Type.UPPER, 12.5, new Cycle(Arrays.asList(new Iteration(3, 15), new Iteration(3, 12), new Iteration(3, 10)))), workoutId);
         }
     }
 
-    /**
-     * Saving a shared cycle without duplicating
-     */
     public void saveExercise(Exercise exercise, int workoutId) {
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            Cycle cycle = exercise.exercise_cycle;
+        // Run synchronously if called within a databaseWriteExecutor block, or handle threading carefully
+        Cycle cycle = exercise.exercise_cycle;
 
-            if (cycle.id == 0) {
-                // New cycle: insert it and its iterations, then wire up ids
-                long cycleId = cycleDao.insertCycle(toCycleEntity(cycle));
-                cycle.id = (int) cycleId;
+        if (cycle.id == 0) {
+            long cycleId = cycleDao.insertCycle(toCycleEntity(cycle));
+            cycle.id = (int) cycleId;
 
-                List<IterationEntity> iterationEntities = toIterationEntities(cycle, cycle.id);
-                List<Long> iterationIds = cycleDao.insertIterations(iterationEntities);
-                for (int i = 0; i < iterationIds.size(); i++) {
-                    cycle.get_cycle().get(i).id = iterationIds.get(i).intValue();
-                }
+            List<IterationEntity> iterationEntities = toIterationEntities(cycle, cycle.id);
+            List<Long> iterationIds = cycleDao.insertIterations(iterationEntities);
+            for (int i = 0; i < iterationIds.size(); i++) {
+                cycle.get_cycle().get(i).id = iterationIds.get(i).intValue();
             }
-            // If cycle.id != 0, it's already persisted and possibly shared — don't touch it here.
+        }
 
-            ExerciseEntity entity = toEntity(exercise, workoutId);
-            if (entity.id == 0) {
-                long newId = exerciseDao.insert(entity);
-                exercise.id = (int) newId;
-            } else {
-                exerciseDao.update(entity);
-            }
-        });
+        ExerciseEntity entity = toEntity(exercise, workoutId);
+        if (entity.id == 0) {
+            long newId = exerciseDao.insert(entity);
+            exercise.id = (int) newId;
+        } else {
+            exerciseDao.update(entity);
+        }
     }
 }

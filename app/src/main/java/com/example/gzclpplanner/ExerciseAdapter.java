@@ -66,11 +66,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             binding.tvTier.setText(exercise.tier);
             binding.tvWeight.setText(exercise.currentWeight + " kg");
 
-            // Note: Sets and Reps are not in ExerciseEntity directly.
-            // In a real app, you might want to fetch the current iteration's sets/reps.
-            // For now, we'll leave them as placeholder or you can enhance ExerciseEntity.
-            // binding.tvSets.setText("...");
-            // binding.tvReps.setText("...");
+            binding.tvSets.setText(exercise.sets + " Sets");
+            binding.tvReps.setText(exercise.reps + " Reps");
 
             binding.btnDone.setOnClickListener(v -> listener.onDone(exercise));
             binding.btnFailed.setOnClickListener(v -> listener.onFailed(exercise));

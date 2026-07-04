@@ -4,6 +4,7 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 
 @Entity(
         tableName = "exercise",
@@ -47,4 +48,9 @@ public class ExerciseEntity {
     public String type;
     public double currentWeight;
     public double initialWeight;
+
+    @Ignore
+    public int sets;
+    @Ignore
+    public int reps;
 }

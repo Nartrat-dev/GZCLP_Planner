@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.*;
 
 import com.example.gzclpplanner.data.entity.ExerciseEntity;
+import com.example.gzclpplanner.data.relations.ExerciseWithIteration;
 
 import java.util.List;
 
@@ -24,6 +25,11 @@ public interface ExerciseDao {
     @Query("SELECT * FROM exercise WHERE id = :id")
     ExerciseEntity getExerciseById(int id);
 
+    @Transaction
+    @Query("SELECT * FROM exercise")
+    LiveData<List<ExerciseWithIteration>> getAllExercisesWithIteration();
+
+    @Transaction
     @Query("SELECT * FROM exercise WHERE workoutId = :workoutId")
-    List<ExerciseEntity> getExercisesForWorkout(int workoutId);
+    LiveData<List<ExerciseWithIteration>> getExercisesForWorkoutWithIteration(int workoutId);
 }

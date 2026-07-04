@@ -40,10 +40,23 @@ public class ExercisesFragment extends Fragment implements ExerciseAdapter.OnExe
         adapter = new ExerciseAdapter(this);
         binding.rvExercises.setAdapter(adapter);
 
-        // Observe data
-        repository.getAllExercises().observe(getViewLifecycleOwner(), exercises -> {
-            adapter.setExercises(exercises);
-        });
+        // Check if we are filtering for a specific workout
+        int workoutId = -1;
+        if (getArguments() != null) {
+            workoutId = getArguments().getInt("workoutId", -1);
+        }
+
+        if (workoutId != -1) {
+            // Observe filtered data
+            repository.getExercisesForWorkout(workoutId).observe(getViewLifecycleOwner(), exercises -> {
+                adapter.setExercises(exercises);
+            });
+        } else {
+            // Observe all data
+            repository.getAllExercisesWithSetsReps().observe(getViewLifecycleOwner(), exercises -> {
+                adapter.setExercises(exercises);
+            });
+        }
 
         // Handle Add Exercise button
         binding.btnAddExercise.setOnClickListener(v -> {

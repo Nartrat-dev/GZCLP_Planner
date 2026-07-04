@@ -10,7 +10,7 @@ import com.example.gzclpplanner.data.entity.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {ExerciseEntity.class, CycleEntity.class, IterationEntity.class, WorkoutEntity.class, WorkoutPlanEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {ExerciseEntity.class, CycleEntity.class, IterationEntity.class, WorkoutEntity.class, WorkoutPlanEntity.class}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     // DAOs
@@ -34,7 +34,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             context.getApplicationContext(),
                             AppDatabase.class,
                             "app_database"
-                    ).build();
+                    ).fallbackToDestructiveMigration().build();
                 }
             }
         }

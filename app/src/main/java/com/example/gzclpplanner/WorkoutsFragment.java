@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.gzclpplanner.data.relations.WorkoutWithExercises;
@@ -53,7 +54,10 @@ public class WorkoutsFragment extends Fragment implements WorkoutAdapter.OnWorko
 
     @Override
     public void onStartWorkout(WorkoutWithExercises workout) {
-        // TODO: Navigate to active workout screen or similar
+        Bundle bundle = new Bundle();
+        bundle.putInt("workoutId", workout.workout.id);
+        NavHostFragment.findNavController(this)
+                .navigate(R.id.action_WorkoutsFragment_to_ExercisesFragment, bundle);
     }
 
     @Override
