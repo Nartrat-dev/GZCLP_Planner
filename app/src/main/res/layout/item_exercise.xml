@@ -37,7 +37,31 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#666666"
+                android:layout_marginEnd="8dp"
                 tools:text="#1" />
+
+            <ImageButton
+                android:id="@+id/btnEditExercise"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="Edit exercise"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_edit"
+                app:tint="#1976D2"
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true"
+                android:layout_marginEnd="8dp" />
+
+            <ImageButton
+                android:id="@+id/btnDeleteExercise"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="Delete exercise"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="#B00020"
+                android:scaleType="centerInside"
+                android:adjustViewBounds="true" />
 
         </LinearLayout>
 

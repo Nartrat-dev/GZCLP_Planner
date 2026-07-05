@@ -1,5 +1,6 @@
 package com.example.gzclpplanner;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,13 +8,18 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.gzclpplanner.data.entity.ExerciseEntity;
+
+import androidx.appcompat.app.AlertDialog;
+
 import com.example.gzclpplanner.data.repository.Repository;
 import com.example.gzclpplanner.databinding.FragmentExercisesBinding;
 
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 public class ExercisesFragment extends Fragment implements ExerciseAdapter.OnExerciseActionListener {
 
@@ -31,6 +37,7 @@ public class ExercisesFragment extends Fragment implements ExerciseAdapter.OnExe
         return binding.getRoot();
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -41,14 +48,14 @@ public class ExercisesFragment extends Fragment implements ExerciseAdapter.OnExe
         binding.rvExercises.setAdapter(adapter);
 
         // Check if we are filtering for a specific workout
-        int workoutId = -1;
+        AtomicInteger workoutId = new AtomicInteger(-1);
         if (getArguments() != null) {
-            workoutId = getArguments().getInt("workoutId", -1);
+            workoutId.set(getArguments().getInt("workoutId", -1));
         }
 
-        if (workoutId != -1) {
+        if (workoutId.get() != -1) {
             // Observe filtered data
-            repository.getExercisesForWorkout(workoutId).observe(getViewLifecycleOwner(), exercises -> {
+            repository.getExercisesForWorkout(workoutId.get()).observe(getViewLifecycleOwner(), exercises -> {
                 adapter.setExercises(exercises);
             });
         } else {
@@ -58,9 +65,15 @@ public class ExercisesFragment extends Fragment implements ExerciseAdapter.OnExe
             });
         }
 
-        // Handle Add Exercise button
+        // Handle Add Exercise button -> navigate to AddExerciseFragment with optional workoutId
         binding.btnAddExercise.setOnClickListener(v -> {
-            // TODO: Open add exercise dialog or navigate to add exercise screen
+            Bundle args = new Bundle();
+            if (getArguments() != null) {
+                workoutId.set(getArguments().getInt("workoutId", -1));
+                if (workoutId.get() != -1) args.putInt("workoutId", workoutId.get());
+            }
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_ExercisesFragment_to_AddExerciseFragment, args);
         });
     }
 
@@ -72,6 +85,28 @@ public class ExercisesFragment extends Fragment implements ExerciseAdapter.OnExe
     @Override
     public void onFailed(ExerciseEntity exercise) {
         repository.completeExercise(exercise.id, false);
+    }
+
+    @Override
+    public void onDelete(ExerciseEntity exercise) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete exercise")
+                .setMessage("Are you sure you want to delete exercise '" + exercise.exerciseName + "'?")
+                .setPositiveButton("Delete", (dialog, which) -> repository.deleteExercise(exercise))
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    @Override
+    public void onEdit(ExerciseEntity exercise) {
+        Bundle args = new Bundle();
+        args.putInt("workoutId", exercise.workoutId);
+        args.putInt("exerciseId", exercise.id);
+        args.putString("exerciseName", exercise.exerciseName);
+        args.putFloat("startingWeight", (float) exercise.currentWeight);
+        args.putString("tier", exercise.tier != null ? exercise.tier : "");
+        args.putString("type", exercise.type != null ? exercise.type : "");
+        NavHostFragment.findNavController(this).navigate(R.id.action_ExercisesFragment_to_AddExerciseFragment, args);
     }
 
     @Override

@@ -254,4 +254,47 @@ public class Repository {
             exerciseDao.update(entity);
         }
     }
+
+    /**
+     * Asynchronous wrapper for saveExercise to be called from UI thread
+     */
+    public void saveExerciseAsync(Exercise exercise, int workoutId) {
+        AppDatabase.databaseWriteExecutor.execute(() -> saveExercise(exercise, workoutId));
+    }
+
+    /**
+     * Workout operations
+     */
+    public void saveWorkout(com.example.gzclpplanner.data.entity.WorkoutEntity workout) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            if (workout.id == 0) {
+                workoutDao.insert(workout);
+            } else {
+                workoutDao.update(workout);
+            }
+        });
+    }
+
+    public void deleteWorkout(com.example.gzclpplanner.data.entity.WorkoutEntity workout) {
+        AppDatabase.databaseWriteExecutor.execute(() -> workoutDao.delete(workout));
+    }
+
+    public void deleteExercise(com.example.gzclpplanner.data.entity.ExerciseEntity exercise) {
+        AppDatabase.databaseWriteExecutor.execute(() -> exerciseDao.delete(exercise));
+    }
+
+    /**
+     * Update only the editable fields of an existing exercise (keeps cycle references intact)
+     */
+    public void updateExerciseFieldsAsync(int exerciseId, String name, double currentWeight, String tier, String type) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            ExerciseEntity entity = exerciseDao.getExerciseById(exerciseId);
+            if (entity == null) return;
+            entity.exerciseName = name;
+            entity.currentWeight = currentWeight;
+            entity.tier = tier;
+            entity.type = type;
+            exerciseDao.update(entity);
+        });
+    }
 }

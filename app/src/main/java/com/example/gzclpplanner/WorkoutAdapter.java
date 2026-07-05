@@ -22,6 +22,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
 
     public interface OnWorkoutActionListener {
         void onStartWorkout(WorkoutWithExercises workout);
+        void onDeleteWorkout(WorkoutWithExercises workout);
+        void onEditWorkout(WorkoutWithExercises workout);
     }
 
     public WorkoutAdapter(OnWorkoutActionListener listener) {
@@ -77,6 +79,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
             }
 
             binding.btnGoToWorkout.setOnClickListener(v -> listener.onStartWorkout(workoutWithExercises));
+            binding.btnEditWorkout.setOnClickListener(v -> listener.onEditWorkout(workoutWithExercises));
+            binding.btnDeleteWorkout.setOnClickListener(v -> listener.onDeleteWorkout(workoutWithExercises));
         }
     }
 }

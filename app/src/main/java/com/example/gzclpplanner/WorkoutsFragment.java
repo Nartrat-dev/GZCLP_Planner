@@ -11,6 +11,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.gzclpplanner.data.relations.WorkoutWithExercises;
+import com.example.gzclpplanner.data.entity.WorkoutEntity;
+import androidx.appcompat.app.AlertDialog;
 import com.example.gzclpplanner.data.repository.Repository;
 import com.example.gzclpplanner.databinding.FragmentWorkoutsBinding;
 
@@ -46,10 +48,11 @@ public class WorkoutsFragment extends Fragment implements WorkoutAdapter.OnWorko
             adapter.setWorkouts(workouts);
         });
 
-        // Handle Add Workout button
-        binding.btnAddWorkout.setOnClickListener(v -> {
-            // TODO: Open add workout dialog or navigate to add workout screen
-        });
+        // Handle Add Workout button -> navigate to AddWorkoutFragment
+        binding.btnAddWorkout.setOnClickListener(v ->
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.action_WorkoutsFragment_to_AddWorkoutFragment)
+        );
     }
 
     @Override
@@ -58,6 +61,27 @@ public class WorkoutsFragment extends Fragment implements WorkoutAdapter.OnWorko
         bundle.putInt("workoutId", workout.workout.id);
         NavHostFragment.findNavController(this)
                 .navigate(R.id.action_WorkoutsFragment_to_ExercisesFragment, bundle);
+    }
+
+    @Override
+    public void onDeleteWorkout(WorkoutWithExercises workout) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete workout")
+                .setMessage("Are you sure you want to delete workout '" + workout.workout.workoutName + "'? This will remove all exercises in it.")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    repository.deleteWorkout(workout.workout);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    @Override
+    public void onEditWorkout(WorkoutWithExercises workout) {
+        Bundle args = new Bundle();
+        args.putInt("workoutId", workout.workout.id);
+        args.putString("workoutName", workout.workout.workoutName);
+        args.putInt("workoutNumber", workout.workout.workoutNumber);
+        NavHostFragment.findNavController(this).navigate(R.id.action_WorkoutsFragment_to_AddWorkoutFragment, args);
     }
 
     @Override

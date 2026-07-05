@@ -21,6 +21,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public interface OnExerciseActionListener {
         void onDone(ExerciseEntity exercise);
         void onFailed(ExerciseEntity exercise);
+        void onDelete(ExerciseEntity exercise);
+        void onEdit(ExerciseEntity exercise);
     }
 
     public ExerciseAdapter(OnExerciseActionListener listener) {
@@ -71,6 +73,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
             binding.btnDone.setOnClickListener(v -> listener.onDone(exercise));
             binding.btnFailed.setOnClickListener(v -> listener.onFailed(exercise));
+            binding.btnEditExercise.setOnClickListener(v -> listener.onEdit(exercise));
+            binding.btnDeleteExercise.setOnClickListener(v -> listener.onDelete(exercise));
         }
     }
 }

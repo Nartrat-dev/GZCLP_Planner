@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Exercise"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="8dp" />
+
+        <EditText
+            android:id="@+id/etExerciseName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Exercise name" />
+
+        <EditText
+            android:id="@+id/etStartingWeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Starting weight (kg)"
+            android:inputType="numberDecimal" />
+
+        <RadioGroup
+            android:id="@+id/rgTier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/rbT1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="T1" />
+
+            <RadioButton
+                android:id="@+id/rbT2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="T2" />
+
+            <RadioButton
+                android:id="@+id/rbT3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="T3"
+                android:checked="true" />
+        </RadioGroup>
+
+        <Switch
+            android:id="@+id/switchType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOn="UPPER"
+            android:textOff="LOWER"
+            android:checked="true"
+            android:layout_marginTop="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/btnSaveExercise"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Save" />
+
+            <Button
+                android:id="@+id/btnCancelExercise"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
+
