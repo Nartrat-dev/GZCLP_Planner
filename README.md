@@ -34,7 +34,9 @@ In this first Version (v0.1) it looks like this:
 
 ## Implementation Details
 
-- **Database:** Uses **Room (SQLite)** for local persistence. It includes entities for `Workouts`, `Exercises`, `Cycles`, and `Iterations`, to represent the nature of the training program
+- **Database (Room Persistence Library):** The app uses **Room**, an abstraction layer over SQLite
+    - **Functionality:** Room provides an abstraction layer over SQLLite which makes it easy to handle (https://developer.android.com/training/data-storage/room)
+    - **Use in Project:** The database reflects the GZCLP structure through entities like `WorkoutEntity`, `ExerciseEntity`, `CycleEntity`, and `IterationEntity`
 - **App Logic:** The GZCLP-specific rules are encapsulated within the `applogic` package. This logic is independent of the Android framework, making it possible to maintain and test isolated
 - **UI Components:**
     - **Navigation Component:** For seamless fragment transitions
