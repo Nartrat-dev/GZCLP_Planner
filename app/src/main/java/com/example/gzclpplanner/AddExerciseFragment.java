@@ -72,12 +72,13 @@ public class AddExerciseFragment extends Fragment {
             String typeStr = binding.switchType.isChecked() ? "UPPER" : "LOWER";
 
             if (exerciseId != -1) {
-                // Update existing exercise fields (keeps cycle intact)
-                repository.updateExerciseFieldsAsync(exerciseId, name, weight, tierStr, typeStr);
+                // Update existing exercise fields
+                Cycle newCycle = getDefaultCycleForTier(tierStr);
+                repository.updateExerciseFieldsAsync(exerciseId, name, weight, tierStr, typeStr, newCycle);
             } else {
                 Exercise.Tier tier = Exercise.Tier.valueOf(tierStr);
                 Exercise.Type type = binding.switchType.isChecked() ? Exercise.Type.UPPER : Exercise.Type.LOWER;
-                Cycle cycle = new Cycle(new Iteration(3,15), new Iteration(3,12), new Iteration(3,10));
+                Cycle cycle = getDefaultCycleForTier(tierStr);
                 Exercise ex = new Exercise(name, tier, type, weight, cycle);
                 repository.saveExerciseAsync(ex, workoutId);
             }
@@ -86,6 +87,16 @@ public class AddExerciseFragment extends Fragment {
         });
 
         binding.btnCancelExercise.setOnClickListener(v -> NavHostFragment.findNavController(this).navigateUp());
+    }
+
+    private Cycle getDefaultCycleForTier(String tier) {
+        if (tier.equals("T1")) {
+            return new Cycle(new Iteration(3, 5), new Iteration(3, 3), new Iteration(3, 1));
+        } else if (tier.equals("T2")) {
+            return new Cycle(new Iteration(3, 10), new Iteration(3, 8), new Iteration(3, 6));
+        } else {
+            return new Cycle(new Iteration(3, 15), new Iteration(3, 12), new Iteration(3, 10));
+        }
     }
 
     @Override

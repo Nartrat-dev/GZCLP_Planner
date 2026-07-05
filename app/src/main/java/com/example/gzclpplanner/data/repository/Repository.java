@@ -12,12 +12,12 @@ import com.example.gzclpplanner.data.dao.*;
 import com.example.gzclpplanner.data.relations.CycleWithIterations;
 import com.example.gzclpplanner.data.relations.ExerciseWithIteration;
 import com.example.gzclpplanner.data.relations.WorkoutWithExercises;
-import com.example.gzclpplanner.data.relations.WorkoutWithExercises;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class Repository {
 
@@ -25,7 +25,6 @@ public class Repository {
     private final CycleDao cycleDao;
     private final WorkoutDao workoutDao;
     private final WorkoutPlanDao workoutPlanDao;
-    private final IterationDao iterationDao;
     private final GZCLPLogic logic;
 
     public Repository(Application application) {
@@ -34,7 +33,6 @@ public class Repository {
         cycleDao = db.cycleDao();
         workoutDao = db.workoutDao();
         workoutPlanDao = db.workoutPlanDao();
-        iterationDao = db.iterationDao();
         logic = new GZCLPLogic();
     }
 
@@ -124,10 +122,6 @@ public class Repository {
     /**
      * Public API for UI
      */
-
-    public LiveData<List<ExerciseEntity>> getAllExercises() {
-        return exerciseDao.getAllExercises();
-    }
 
     public LiveData<List<WorkoutWithExercises>> getAllWorkoutsWithExercises() {
         return workoutDao.getAllWorkoutsWithExercises();
@@ -284,17 +278,44 @@ public class Repository {
     }
 
     /**
-     * Update only the editable fields of an existing exercise (keeps cycle references intact)
+     * Update only the editable fields of an existing exercise.
+     * If the tier changes, we reset the cycle to the new tier's defaults.
      */
-    public void updateExerciseFieldsAsync(int exerciseId, String name, double currentWeight, String tier, String type) {
+    public void updateExerciseFieldsAsync(int exerciseId, String name, double currentWeight, String tier, String type, Cycle newCycleIfReset) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             ExerciseEntity entity = exerciseDao.getExerciseById(exerciseId);
             if (entity == null) return;
+
+            boolean tierChanged = !Objects.equals(entity.tier, tier);
+            
             entity.exerciseName = name;
             entity.currentWeight = currentWeight;
             entity.tier = tier;
             entity.type = type;
-            exerciseDao.update(entity);
+
+            if (tierChanged && newCycleIfReset != null) {
+                // We need to save the new cycle and update the entity's cycle references
+                saveNewCycleAndLinkToEntity(newCycleIfReset, entity);
+            } else {
+                exerciseDao.update(entity);
+            }
         });
+    }
+
+    private void saveNewCycleAndLinkToEntity(Cycle cycle, ExerciseEntity entity) {
+        // Insert new cycle
+        long cycleId = cycleDao.insertCycle(toCycleEntity(cycle));
+        cycle.id = (int) cycleId;
+
+        // Insert iterations
+        List<IterationEntity> iterationEntities = toIterationEntities(cycle, cycle.id);
+        List<Long> iterationIds = cycleDao.insertIterations(iterationEntities);
+        for (int i = 0; i < iterationIds.size(); i++) {
+            cycle.get_cycle().get(i).id = iterationIds.get(i).intValue();
+        }
+
+        entity.cycleId = cycle.id;
+        entity.currentIterationId = cycle.get_current_iteration().id;
+        exerciseDao.update(entity);
     }
 }

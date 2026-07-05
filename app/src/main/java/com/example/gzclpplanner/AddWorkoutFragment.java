@@ -33,34 +33,32 @@ public class AddWorkoutFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        repository.getAllWorkoutsWithExercises().observe(getViewLifecycleOwner(), workouts -> {
-            if (workouts != null) {
-                // compute the smallest missing positive integer from existing workoutNumber values
-                java.util.Set<Integer> numbers = new java.util.HashSet<>();
-                int max = 0;
-                for (int i = 0; i < workouts.size(); i++) {
-                    int n = workouts.get(i).workout.workoutNumber;
-                    numbers.add(n);
-                    if (n > max) max = n;
-                }
-                int candidate = 1;
-                while (numbers.contains(candidate)) {
-                    candidate++;
-                }
-                // candidate is now the smallest missing positive integer
-                nextNumber = candidate;
-            }
-        });
-
         // Prefill if editing
         if (getArguments() != null) {
             workoutId = getArguments().getInt("workoutId", -1);
             String name = getArguments().getString("workoutName", "");
-            int number = getArguments().getInt("workoutNumber", nextNumber);
+            int number = getArguments().getInt("workoutNumber", -1);
             if (workoutId != -1) {
                 binding.etWorkoutName.setText(name);
-                nextNumber = number; // preserve existing number
+                if (number != -1) nextNumber = number; // preserve existing number
             }
+        }
+
+        if (workoutId == -1) {
+            repository.getAllWorkoutsWithExercises().observe(getViewLifecycleOwner(), workouts -> {
+                if (workouts != null) {
+                    // compute the smallest missing positive integer from existing workoutNumber values
+                    java.util.Set<Integer> numbers = new java.util.HashSet<>();
+                    for (int i = 0; i < workouts.size(); i++) {
+                        numbers.add(workouts.get(i).workout.workoutNumber);
+                    }
+                    int candidate = 1;
+                    while (numbers.contains(candidate)) {
+                        candidate++;
+                    }
+                    nextNumber = candidate;
+                }
+            });
         }
 
         binding.btnSaveWorkout.setOnClickListener(v -> {
